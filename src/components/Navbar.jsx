@@ -28,7 +28,7 @@ useEffect(() => {
     })
     .catch(err => console.error(err));
 }, []);
-
+;
 
   // Update time every second
   useEffect(() => {
@@ -52,7 +52,7 @@ useEffect(() => {
     },
   ];
 
-  // Typing 11
+  // Typing effect
   const fullText = 'Information Technology Student | Aspiring Full-Stack Developer';
   const [typedText, setTypedText] = useState('');
   const [index, setIndex] = useState(0);
