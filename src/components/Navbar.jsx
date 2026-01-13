@@ -1,3 +1,4 @@
+
 import React, { useState, useRef, useEffect } from 'react';
 import {
   Mail,
@@ -21,11 +22,25 @@ export default function ProfileHeaderReplica({ darkMode, setDarkMode, setShowCon
 const [visitors, setVisitors] = useState(0);
 
 useEffect(() => {
-  fetch('https://api.countapi.xyz/hit/markjeus.github.io/portfolio')
-    .then(res => res.json())
-    .then(data => setVisitors(data.value))
-    .catch(err => console.error('Error fetching visitor count:', err));
+  const hasVisited = sessionStorage.getItem('hasVisitedPortfolio');
+
+  if (!hasVisited) {
+    fetch('https://api.countapi.xyz/hit/portfolio-markjeus/visitors')
+      .then(res => res.json())
+      .then(data => {
+        setVisitors(data.value);
+        sessionStorage.setItem('hasVisitedPortfolio', 'true');
+      })
+      .catch(err => console.error('Error fetching visitor count:', err));
+  } else {
+    // kuha lang ng current count, walang dagdag
+    fetch('https://api.countapi.xyz/get/portfolio-markjeus/visitors')
+      .then(res => res.json())
+      .then(data => setVisitors(data.value))
+      .catch(err => console.error('Error fetching visitor count:', err));
+  }
 }, []);
+
 
 
 
