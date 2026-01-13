@@ -40,6 +40,16 @@ useEffect(() => {
       .catch(err => console.error('Error fetching visitor count:', err));
   }
 }, []);
+useEffect(() => {
+  const syncVisitors = setInterval(() => {
+    fetch('https://api.countapi.xyz/get/portfolio-markjeus/visitors')
+      .then(res => res.json())
+      .then(data => setVisitors(data.value))
+      .catch(() => {});
+  }, 3000); // every 3 seconds
+
+  return () => clearInterval(syncVisitors);
+}, []);
 
 
 
