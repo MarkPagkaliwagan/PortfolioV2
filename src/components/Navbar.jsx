@@ -18,15 +18,17 @@ export default function ProfileHeaderReplica({ darkMode, setDarkMode, setShowCon
   const [hoverBtn, setHoverBtn] = useState(null);
   const btnRefs = useRef({});
   const [time, setTime] = useState(new Date());
-  const [visitors, setVisitors] = useState(0);
+const [visitors, setVisitors] = useState(0);
 
-  // Simulate visitor count increment on page load
-  useEffect(() => {
-    const storedVisitors = parseInt(localStorage.getItem('visitors') || '0', 10);
-    const newCount = storedVisitors + 1;
-    setVisitors(newCount);
-    localStorage.setItem('visitors', newCount);
-  }, []);
+useEffect(() => {
+  fetch('https://api.countapi.xyz/hit/markjeus-portfolio/visits')
+    .then(res => res.json())
+    .then(data => {
+      setVisitors(data.value);
+    })
+    .catch(err => console.error(err));
+}, []);
+
 
   // Update time every second
   useEffect(() => {
@@ -50,7 +52,7 @@ export default function ProfileHeaderReplica({ darkMode, setDarkMode, setShowCon
     },
   ];
 
-  // Typing effect
+  // Typing 11
   const fullText = 'Information Technology Student | Aspiring Full-Stack Developer';
   const [typedText, setTypedText] = useState('');
   const [index, setIndex] = useState(0);
