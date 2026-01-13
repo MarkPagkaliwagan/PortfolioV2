@@ -21,14 +21,21 @@ export default function ProfileHeaderReplica({ darkMode, setDarkMode, setShowCon
 const [visitors, setVisitors] = useState(0);
 
 useEffect(() => {
-  fetch('https://api.countapi.xyz/hit/markjeus-portfolio/visits')
-    .then(res => res.json())
-    .then(data => {
-      setVisitors(data.value);
-    })
-    .catch(err => console.error(err));
+  const visited = localStorage.getItem('visited');
+
+  if (!visited) {
+    fetch('https://api.countapi.xyz/hit/markjeus.github.io/portfolio')
+      .then(res => res.json())
+      .then(data => setVisitors(data.value));
+
+    localStorage.setItem('visited', 'true');
+  } else {
+    fetch('https://api.countapi.xyz/get/markjeus.github.io/portfolio')
+      .then(res => res.json())
+      .then(data => setVisitors(data.value));
+  }
 }, []);
-;
+
 
   // Update time every second
   useEffect(() => {
