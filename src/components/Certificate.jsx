@@ -8,9 +8,14 @@ import cert4 from "../assets/certificate/cert4.png";
 import cert5 from "../assets/certificate/cert5.png";
 import cert6 from "../assets/certificate/cert6.png";
 import cert7 from "../assets/certificate/cert7.png";
+import cert8 from "../assets/certificate/cert8.png";
+import cert9 from "../assets/certificate/cert9.png";
+import cert10 from "../assets/certificate/cert10.png";
+import cert11 from "../assets/certificate/cert11.png";
+import cert12 from "../assets/certificate/cert12.png";
 
 export default function Certificate({ darkMode }) {
-  const certificates = [cert1, cert2, cert3, cert4, cert5, cert6, cert7];
+  const certificates = [cert1, cert2, cert3, cert4, cert5, cert6, cert7, cert8, cert9, cert10, cert11, cert12];
   const loopImages = [...certificates, ...certificates];
 
   const [selectedCert, setSelectedCert] = useState(null);
