@@ -7,10 +7,12 @@ import ParticlesBackground from "./components/ParticlesBackground";
 import Contact from "./components/Contact";
 import Footer from "./components/Footer";
 import "./index.css";
+import LoadingScreen from "./components/LoadingScreen";
 
 function App() {
   const [darkMode, setDarkMode] = useState(false);
   const [showContact, setShowContact] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   // 👉 REF para sa Contact section
   const contactRef = useRef(null);
@@ -32,28 +34,32 @@ function App() {
 
   return (
     <div className="min-h-screen relative">
+      {loading && <LoadingScreen onComplete={() => setLoading(false)} />}
       {/* Particle background */}
       <ParticlesBackground isDark={darkMode} />
+      {!loading && (
+        <>
+          {/* Page content */}
+          <Navbar
+            darkMode={darkMode}
+            setDarkMode={setDarkMode}
+            setShowContact={setShowContact}
+          />
 
-      {/* Page content */}
-      <Navbar
-        darkMode={darkMode}
-        setDarkMode={setDarkMode}
-        setShowContact={setShowContact}
-      />
+          <GitHubSection darkMode={darkMode} />
+          <About darkMode={darkMode} />
+          <Certificate darkMode={darkMode} />
 
-      <GitHubSection darkMode={darkMode} />
-      <About darkMode={darkMode} />
-      <Certificate darkMode={darkMode} />
+          {/* 👉 CONTACT SECTION (toggle + scroll target) */}
+          {showContact && (
+            <div ref={contactRef}>
+              <Contact darkMode={darkMode} />
+            </div>
+          )}
 
-      {/* 👉 CONTACT SECTION (toggle + scroll target) */}
-      {showContact && (
-        <div ref={contactRef}>
-          <Contact darkMode={darkMode} />
-        </div>
+          <Footer darkMode={darkMode} />
+        </>
       )}
-
-      <Footer darkMode={darkMode} />
     </div>
   );
 }
