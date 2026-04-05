@@ -5,6 +5,12 @@ const LoadingScreen = ({ onComplete }) => {
   const [progress, setProgress] = useState(0);
   const [fadeOut, setFadeOut] = useState(false);
 
+  // ✅ FIX: I-store ang onComplete sa ref para hindi mag-trigger ng re-run ang useEffect
+  const onCompleteRef = useRef(onComplete);
+  useEffect(() => {
+    onCompleteRef.current = onComplete;
+  }, [onComplete]);
+
   // Particles animation
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -69,7 +75,7 @@ const LoadingScreen = ({ onComplete }) => {
       cancelAnimationFrame(animId);
       window.removeEventListener("resize", resize);
     };
-  }, []);
+  }, []); // ✅ empty deps — isang beses lang mag-mount
 
   // Progress bar
   useEffect(() => {
@@ -79,12 +85,10 @@ const LoadingScreen = ({ onComplete }) => {
       if (current >= 100) {
         current = 100;
         clearInterval(interval);
-        // Start fade out after reaching 100%
         setTimeout(() => {
           setFadeOut(true);
-          // Call onComplete after fade animation ends
           setTimeout(() => {
-            if (onComplete) onComplete();
+            if (onCompleteRef.current) onCompleteRef.current(); // ✅ ref, hindi direct
           }, 700);
         }, 300);
       }
@@ -92,7 +96,7 @@ const LoadingScreen = ({ onComplete }) => {
     }, 80);
 
     return () => clearInterval(interval);
-  }, [onComplete]);
+  }, []); // ✅ empty deps — isang beses lang mag-run
 
   return (
     <div
@@ -109,13 +113,11 @@ const LoadingScreen = ({ onComplete }) => {
         visibility: fadeOut ? "hidden" : "visible",
       }}
     >
-      {/* Particles canvas */}
       <canvas
         ref={canvasRef}
         style={{ position: "absolute", inset: 0, width: "100%", height: "100%" }}
       />
 
-      {/* Center content */}
       <div
         style={{
           position: "relative",
@@ -128,7 +130,6 @@ const LoadingScreen = ({ onComplete }) => {
       >
         {/* Spinning monogram ring */}
         <div style={{ position: "relative", width: 80, height: 80 }}>
-          {/* Outer slow ring */}
           <div
             style={{
               position: "absolute",
@@ -138,7 +139,6 @@ const LoadingScreen = ({ onComplete }) => {
               animation: "ls-spin-reverse 6s linear infinite",
             }}
           />
-          {/* Main ring */}
           <div
             style={{
               width: 80,
@@ -243,7 +243,7 @@ const LoadingScreen = ({ onComplete }) => {
                 height: 4,
                 borderRadius: "50%",
                 background: "rgba(100,220,180,0.6)",
-                animation: `ls-pulse 1.2s ease-in-out infinite`,
+                animation: "ls-pulse 1.2s ease-in-out infinite",
                 animationDelay: `${i * 0.2}s`,
               }}
             />
@@ -251,10 +251,8 @@ const LoadingScreen = ({ onComplete }) => {
         </div>
       </div>
 
-      {/* Keyframe styles */}
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@400;700;800&display=swap');
-
         @keyframes ls-spin {
           from { transform: rotate(0deg); }
           to   { transform: rotate(360deg); }
